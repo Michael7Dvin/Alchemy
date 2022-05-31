@@ -6,7 +6,7 @@ public class Ingredient : ScriptableObject
 {
     [SerializeField] private string _name;
     [SerializeField] private string _description;
-    [SerializeField] private List<IngredientMagicElement> _magicElements;
+    [SerializeField] private List<IngredientMagicElement> _magicElements = new();
     [SerializeField] private float _amplifyFactor;
 
     public string Name => _name;

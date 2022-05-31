@@ -14,7 +14,7 @@ public enum MagicElement
 [CreateAssetMenu(menuName = "Scriptable Objects/Ingredient Magic Element")]
 public class IngredientMagicElement : ScriptableObject
 {
-    [SerializeField] private readonly string _name;
+    [SerializeField] private string _name;
     [SerializeField] private string _description;
     [SerializeField] private MagicElement _element;
     [SerializeField] private float _elementStrength;
