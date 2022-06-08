@@ -1,8 +1,7 @@
 using UnityEngine;
 
 public class Fuel : MonoBehaviour
-{
-    
+{    
     [SerializeField, Tooltip("Kilograms")] private float _mass;
     [SerializeField, Tooltip("Megajoules / Kilogram")] private float _heatingValue;
     [SerializeField, Tooltip("Mass(Kg) burning in one second")] private float _massBurningInSecond;

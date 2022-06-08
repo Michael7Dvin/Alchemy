@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 public class Liquid : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
 {
@@ -10,8 +11,6 @@ public class Liquid : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
     [SerializeField, Tooltip("Joules / Kilogram * Kelvin")] private float _specificHeat;
     [SerializeField, Tooltip("Joules / Kilogram")] private float _vaporizationEnthalpy;
 
-    //TEMPORARY, interfaces not serializable
-    [SerializeField] private Cauldron _cauldron;
     [SerializeField] private IHeatable _container;
 
     private IHeatable _self;
@@ -23,29 +22,38 @@ public class Liquid : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
     public float Temperature { get => _temperature; set => _temperature = value; }
     public float SpecificHeat => _specificHeat;
 
+    [Inject]
+    private void Construct(Cauldron container)
+    {
+        _container = container;
+    }
+
+    private void Awake()
+    {
+        _self = this;        
+    }
+
     private void Start()
     {
-        _self = this;
-
-        //temp
-        _container = _cauldron;
-
         StartCoroutine(ImplementRealTimePhysicalProcesses());
     }
 
     public IEnumerator ImplementRealTimePhysicalProcesses()
     {
         TransferHeatToAir();
+
         if (Temperature > _container.Temperature)
         {
             _self.TransferHeat(_container);
         }
+
         yield return new WaitForSeconds(PhysicalProcessesSimulation.SpeedCorrection);
         StartCoroutine(ImplementRealTimePhysicalProcesses());
     }
 
     private float GetMassEvaporatingInHour(float temperature)
     {
+        //math function, which calculates evaporation
         return ((0.0001f * Mathf.Pow(temperature, 3)) - (0.0032f * Mathf.Pow(temperature, 2)) + (0.1227f * temperature) - 0.8783f) / 3f;
     }
 
@@ -54,8 +62,10 @@ public class Liquid : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
         return GetMassEvaporatingInHour(temperature) / 60 / 60;
     }
     public void HeatUp(float amountOfHeat)
-    {       
-        if((_temperature + _self.ConvertHeatToTemperature(amountOfHeat)) > _boilingTemperature)
+    {
+        bool isIncomingHeatWillExceedBoilingTemperature = (_temperature + _self.ConvertHeatToTemperature(amountOfHeat)) > _boilingTemperature;
+
+        if (isIncomingHeatWillExceedBoilingTemperature)
         {
             float extraHeat = _self.ConvertTemperatureToHeat(_temperature) + amountOfHeat - _self.ConvertTemperatureToHeat(_boilingTemperature);
 
@@ -96,6 +106,7 @@ public class Liquid : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
     {
         float correctedMassEvaporatingInSecond;
 
+        //evaporating cannot be negative
         if (GetMassEvaporatingInSecond(_temperature) < 0)
         {
             correctedMassEvaporatingInSecond = 0f;

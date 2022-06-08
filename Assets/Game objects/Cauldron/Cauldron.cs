@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 public class Cauldron : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
 {
@@ -8,33 +9,34 @@ public class Cauldron : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
     [SerializeField, Tooltip("Joules / (Kilogram * Kelvin)")] private float _specificHeat;
     [SerializeField, Tooltip("Percent of receiving heat transfering directly to liquid")] private float _thermalConductivityFactor;
 
-    private Liquid _liquid;
-
+    [SerializeField] private Liquid _liquid;
     private IHeatable _self;
-    [SerializeField] private PotionLiquid _potionLiquid;
 
-    //temp
-    [SerializeField] private Liquid liquidToAdd;
 
     public float Mass { get => _mass; set => _mass = value; }
     public float Temperature { get => _temperature; set => _temperature = value; }
     public float SpecificHeat { get => _specificHeat; }
 
 
-    //Everything should be in Start(), but it's in Awake() because of NullReferenceException error
-    private void Awake() => _self = this;
+    [Inject]
+    private void Construct(Liquid liquid)
+    {
+        AddLiquid(liquid);
+    }
+
+    private void Awake()
+    {
+        _self = this;
+    }
 
     private void Start()
     {
-        //temp
-        if (liquidToAdd != null)
-            AddLiquid(liquidToAdd);
         StartCoroutine(ImplementRealTimePhysicalProcesses());
     }
 
     private void OnDisable()
     {
-        if(liquidToAdd != null)
+        if(_liquid != null)
             _liquid.EvaporateCompletely -= RemoveLiquid;
     }
 
@@ -55,11 +57,11 @@ public class Cauldron : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
     {        
         if (_liquid != null && _liquid.Temperature < _temperature)
         {
-            float heatTransferedDirectlyToLiquid = amountOfHeat * _thermalConductivityFactor;
-            float heatToSelf = amountOfHeat - heatTransferedDirectlyToLiquid;
+            float heatTransferingDirectlyToLiquid = amountOfHeat * _thermalConductivityFactor;
+            float heatToSelf = amountOfHeat - heatTransferingDirectlyToLiquid;
 
             _temperature += _self.ConvertHeatToTemperature(heatToSelf);
-            _liquid.HeatUp(heatTransferedDirectlyToLiquid);
+            _liquid.HeatUp(heatTransferingDirectlyToLiquid);
         }
         else
         {
