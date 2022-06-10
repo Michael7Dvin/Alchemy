@@ -9,7 +9,7 @@ public class Cauldron : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
     [SerializeField, Tooltip("Joules / (Kilogram * Kelvin)")] private float _specificHeat;
     [SerializeField, Tooltip("Percent of receiving heat transfering directly to liquid")] private float _thermalConductivityFactor;
 
-    [SerializeField] private Liquid _liquid;
+    private Liquid _liquid;
     private IHeatable _self;
 
 
