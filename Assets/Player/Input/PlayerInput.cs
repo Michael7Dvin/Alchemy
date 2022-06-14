@@ -190,20 +190,27 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drop Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""06dff201-9173-4513-9919-8c504b65b103"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Throw Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""f63910e4-b143-4500-b5b3-11278836a083"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""66328015-00f4-4da7-81c4-6fda830e5f8c"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""7fdbfa08-8c54-4afd-9937-d6728836bd88"",
@@ -212,6 +219,28 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Mouse & Keyboard"",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9b5f698d-7e84-4d5f-b09a-69025130871a"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Drop Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2027b16d-2da5-4002-a88a-8c617fac6437"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -257,6 +286,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         // Interaction
         m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
         m_Interaction_Interact = m_Interaction.FindAction("Interact", throwIfNotFound: true);
+        m_Interaction_DropItem = m_Interaction.FindAction("Drop Item", throwIfNotFound: true);
+        m_Interaction_ThrowItem = m_Interaction.FindAction("Throw Item", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -383,11 +414,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Interaction;
     private IInteractionActions m_InteractionActionsCallbackInterface;
     private readonly InputAction m_Interaction_Interact;
+    private readonly InputAction m_Interaction_DropItem;
+    private readonly InputAction m_Interaction_ThrowItem;
     public struct InteractionActions
     {
         private @PlayerInput m_Wrapper;
         public InteractionActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Interact => m_Wrapper.m_Interaction_Interact;
+        public InputAction @DropItem => m_Wrapper.m_Interaction_DropItem;
+        public InputAction @ThrowItem => m_Wrapper.m_Interaction_ThrowItem;
         public InputActionMap Get() { return m_Wrapper.m_Interaction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -400,6 +435,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_InteractionActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_InteractionActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_InteractionActionsCallbackInterface.OnInteract;
+                @DropItem.started -= m_Wrapper.m_InteractionActionsCallbackInterface.OnDropItem;
+                @DropItem.performed -= m_Wrapper.m_InteractionActionsCallbackInterface.OnDropItem;
+                @DropItem.canceled -= m_Wrapper.m_InteractionActionsCallbackInterface.OnDropItem;
+                @ThrowItem.started -= m_Wrapper.m_InteractionActionsCallbackInterface.OnThrowItem;
+                @ThrowItem.performed -= m_Wrapper.m_InteractionActionsCallbackInterface.OnThrowItem;
+                @ThrowItem.canceled -= m_Wrapper.m_InteractionActionsCallbackInterface.OnThrowItem;
             }
             m_Wrapper.m_InteractionActionsCallbackInterface = instance;
             if (instance != null)
@@ -407,6 +448,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @DropItem.started += instance.OnDropItem;
+                @DropItem.performed += instance.OnDropItem;
+                @DropItem.canceled += instance.OnDropItem;
+                @ThrowItem.started += instance.OnThrowItem;
+                @ThrowItem.performed += instance.OnThrowItem;
+                @ThrowItem.canceled += instance.OnThrowItem;
             }
         }
     }
@@ -440,5 +487,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     public interface IInteractionActions
     {
         void OnInteract(InputAction.CallbackContext context);
+        void OnDropItem(InputAction.CallbackContext context);
+        void OnThrowItem(InputAction.CallbackContext context);
     }
 }

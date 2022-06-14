@@ -4,11 +4,12 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class Movement : MonoBehaviour
 {
+    private PlayerInput _playerInput;
+
     [SerializeField] private float _moveSpeed;
     private Vector3 _localMoveDirection;
 
     private CharacterController _characterController;
-    private PlayerInput _playerInput;
 
 
     private void Awake()
@@ -18,7 +19,7 @@ public class Movement : MonoBehaviour
 
         _playerInput.Movement.HorizontalMovement.started += OnHorizontalMovementInput;
         _playerInput.Movement.HorizontalMovement.performed += OnHorizontalMovementInput;
-        _playerInput.Movement.HorizontalMovement.canceled += OnHorizontalMovementInput;
+        _playerInput.Movement.HorizontalMovement.canceled += OnHorizontalMovementInput;        
     }
 
     private void OnEnable() => _playerInput.Enable();
