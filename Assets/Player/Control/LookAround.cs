@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PickUpInteraction))]
 public class LookAround : MonoBehaviour
 {
     private PlayerInput _playerInput;
     private Vector2 _inputLookRotation;
+    private bool _isLocked;
 
     [SerializeField] float _sensivityX;
     [SerializeField] float _sensivityY;
@@ -13,10 +15,16 @@ public class LookAround : MonoBehaviour
     private float _rotationY;
 
     [SerializeField] private Transform _camera;    
+    private PickUpInteraction _pickUpInteraction;
+    
 
     private void Awake()
     {
         _playerInput = new PlayerInput();
+
+        _pickUpInteraction = GetComponent<PickUpInteraction>();
+        _pickUpInteraction.RotationStarted += () => _isLocked = true;
+        _pickUpInteraction.RotationPerformed += () => _isLocked = false;
 
         _playerInput.LookAround.Look.started += OnLookAroundInput;
         _playerInput.LookAround.Look.performed += OnLookAroundInput;
@@ -33,7 +41,10 @@ public class LookAround : MonoBehaviour
 
     private void Update()
     {
-        Rotate();
+        if(_isLocked == false)
+        {
+            Rotate();
+        }
     }
 
     private void OnLookAroundInput(InputAction.CallbackContext context)

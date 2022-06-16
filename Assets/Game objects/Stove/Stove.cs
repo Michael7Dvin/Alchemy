@@ -69,11 +69,13 @@ public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses
         if(_currentState == StoveState.Extinguished & _fuel.Count > 0)
             _currentState = StoveState.Ignited;
     }
+
     private void Extinguish()
     {
         if(_currentState == StoveState.Ignited)
             _currentState = StoveState.Extinguished;
     }
+
     private void AddFuel(Fuel fuel)
     {
         if(GetAllFuelMass + fuel.Mass < _fuelCapacity)
@@ -82,11 +84,13 @@ public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses
             _fuel.Add(fuel);
         }
     }
+
     private void RemoveFuel(Fuel fuel)
     {
         fuel.BurnOut -= RemoveFuel;
         _fuel.Remove(fuel);
     }
+
     private void BurnFuel()
     {
         List<Fuel> _fuelCopy = new(_fuel);

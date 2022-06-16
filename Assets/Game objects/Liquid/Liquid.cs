@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Zenject;
@@ -15,8 +16,7 @@ public class Liquid : MonoBehaviour, IHeatable, IHaveRealTimePhysicalProcesses
 
     private IHeatable _self;
 
-    public delegate void OnEvaporateCompletely();
-    public event OnEvaporateCompletely EvaporateCompletely;
+    public event Action EvaporateCompletely;
 
     public float Mass { get => _volume / 1000; set => _volume = value * 1000; }
     public float Temperature { get => _temperature; set => _temperature = value; }

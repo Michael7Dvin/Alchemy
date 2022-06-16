@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Fuel : MonoBehaviour
@@ -6,9 +7,8 @@ public class Fuel : MonoBehaviour
     [SerializeField, Tooltip("Megajoules / Kilogram")] private float _heatingValue;
     [SerializeField, Tooltip("Mass(Kg) burning in one second")] private float _massBurningInSecond;
 
-    public delegate void OnBurnOut(Fuel fuel);
-    public event OnBurnOut BurnOut;
-    
+    public event Action<Fuel> BurnOut;
+
     public float Mass => _mass;
     private float HeatingValueInJoulesPerKg => _heatingValue * 1000000;
 

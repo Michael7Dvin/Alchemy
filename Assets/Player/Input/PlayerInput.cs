@@ -208,6 +208,24 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Strart Item Rotation"",
+                    ""type"": ""Button"",
+                    ""id"": ""b11e6a81-f159-41ff-927a-d7d03e3755ec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Item Rotation"",
+                    ""type"": ""Value"",
+                    ""id"": ""95e313df-8bb0-4dc6-ae4f-a49ae8214e82"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -239,8 +257,30 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Mouse & Keyboard"",
                     ""action"": ""Throw Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""99493290-f748-4231-9b05-03db285f9c6c"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Strart Item Rotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e628a9c-bb57-42b6-9672-91f4edbf9f51"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Item Rotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -288,6 +328,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Interaction_Interact = m_Interaction.FindAction("Interact", throwIfNotFound: true);
         m_Interaction_DropItem = m_Interaction.FindAction("Drop Item", throwIfNotFound: true);
         m_Interaction_ThrowItem = m_Interaction.FindAction("Throw Item", throwIfNotFound: true);
+        m_Interaction_StrartItemRotation = m_Interaction.FindAction("Strart Item Rotation", throwIfNotFound: true);
+        m_Interaction_ItemRotation = m_Interaction.FindAction("Item Rotation", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -416,6 +458,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Interaction_Interact;
     private readonly InputAction m_Interaction_DropItem;
     private readonly InputAction m_Interaction_ThrowItem;
+    private readonly InputAction m_Interaction_StrartItemRotation;
+    private readonly InputAction m_Interaction_ItemRotation;
     public struct InteractionActions
     {
         private @PlayerInput m_Wrapper;
@@ -423,6 +467,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_Interaction_Interact;
         public InputAction @DropItem => m_Wrapper.m_Interaction_DropItem;
         public InputAction @ThrowItem => m_Wrapper.m_Interaction_ThrowItem;
+        public InputAction @StrartItemRotation => m_Wrapper.m_Interaction_StrartItemRotation;
+        public InputAction @ItemRotation => m_Wrapper.m_Interaction_ItemRotation;
         public InputActionMap Get() { return m_Wrapper.m_Interaction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -441,6 +487,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @ThrowItem.started -= m_Wrapper.m_InteractionActionsCallbackInterface.OnThrowItem;
                 @ThrowItem.performed -= m_Wrapper.m_InteractionActionsCallbackInterface.OnThrowItem;
                 @ThrowItem.canceled -= m_Wrapper.m_InteractionActionsCallbackInterface.OnThrowItem;
+                @StrartItemRotation.started -= m_Wrapper.m_InteractionActionsCallbackInterface.OnStrartItemRotation;
+                @StrartItemRotation.performed -= m_Wrapper.m_InteractionActionsCallbackInterface.OnStrartItemRotation;
+                @StrartItemRotation.canceled -= m_Wrapper.m_InteractionActionsCallbackInterface.OnStrartItemRotation;
+                @ItemRotation.started -= m_Wrapper.m_InteractionActionsCallbackInterface.OnItemRotation;
+                @ItemRotation.performed -= m_Wrapper.m_InteractionActionsCallbackInterface.OnItemRotation;
+                @ItemRotation.canceled -= m_Wrapper.m_InteractionActionsCallbackInterface.OnItemRotation;
             }
             m_Wrapper.m_InteractionActionsCallbackInterface = instance;
             if (instance != null)
@@ -454,6 +506,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @ThrowItem.started += instance.OnThrowItem;
                 @ThrowItem.performed += instance.OnThrowItem;
                 @ThrowItem.canceled += instance.OnThrowItem;
+                @StrartItemRotation.started += instance.OnStrartItemRotation;
+                @StrartItemRotation.performed += instance.OnStrartItemRotation;
+                @StrartItemRotation.canceled += instance.OnStrartItemRotation;
+                @ItemRotation.started += instance.OnItemRotation;
+                @ItemRotation.performed += instance.OnItemRotation;
+                @ItemRotation.canceled += instance.OnItemRotation;
             }
         }
     }
@@ -489,5 +547,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnDropItem(InputAction.CallbackContext context);
         void OnThrowItem(InputAction.CallbackContext context);
+        void OnStrartItemRotation(InputAction.CallbackContext context);
+        void OnItemRotation(InputAction.CallbackContext context);
     }
 }
