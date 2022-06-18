@@ -5,17 +5,24 @@ using Zenject;
 
 public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses
 {
-    [SerializeField] private StoveState _currentState = StoveState.Extinguished;
+    // If more than 2 states, create State machine 
+    private enum StoveState
+    {
+        Ignited = 0,
+        Extinguished = 1
+    }
 
-    [SerializeField, Tooltip("Kilograms")] private float _fuelCapacity;
-    [SerializeField] private List<Fuel> _fuel = new();
     [SerializeField] private float _heatLossFactor;
-
+    [SerializeField] private List<Fuel> _fuel = new List<Fuel>();
+    [SerializeField, Tooltip("Kilograms")] private float _fuelCapacity;
     
-    private IHeatable _cauldron;
+    [SerializeField] private StoveState _currentState = StoveState.Extinguished;
+    
+    private Heatable _cauldron;
 
-    //change when player controller be added
+    // Change when player controller be added
     [SerializeField] private Fuel _fuelToAdd;
+
 
     private float GetAllFuelMass
     {
@@ -29,6 +36,7 @@ public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses
             return fuelMass;
         }
     }
+
 
     [Inject]
     private void Construct(Cauldron cauldron)
@@ -55,6 +63,7 @@ public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses
         }
     }
 
+
     public IEnumerator ImplementRealTimePhysicalProcesses()
     {   
         if(_currentState == StoveState.Ignited)
@@ -64,16 +73,21 @@ public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses
         StartCoroutine(ImplementRealTimePhysicalProcesses());
     }
 
+
     private void Ignite()
     {
         if(_currentState == StoveState.Extinguished & _fuel.Count > 0)
+        {
             _currentState = StoveState.Ignited;
+        }
     }
 
     private void Extinguish()
     {
         if(_currentState == StoveState.Ignited)
+        {
             _currentState = StoveState.Extinguished;
+        }
     }
 
     private void AddFuel(Fuel fuel)
@@ -108,6 +122,9 @@ public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses
             amountOfHeat += fuel.Burn();
         }
 
-        _cauldron?.HeatUp((amountOfHeat - (amountOfHeat * _heatLossFactor)) * PhysicalProcessesSimulation.SpeedCorrection);
+        if(_cauldron != null)
+        {
+            _cauldron.HeatUp((amountOfHeat - (amountOfHeat * _heatLossFactor)) * PhysicalProcessesSimulation.SpeedCorrection);
+        }
     }
 }

@@ -7,10 +7,13 @@ public class Fuel : MonoBehaviour
     [SerializeField, Tooltip("Megajoules / Kilogram")] private float _heatingValue;
     [SerializeField, Tooltip("Mass(Kg) burning in one second")] private float _massBurningInSecond;
 
-    public event Action<Fuel> BurnOut;
 
     public float Mass => _mass;
     private float HeatingValueInJoulesPerKg => _heatingValue * 1000000;
+
+
+    public event Action<Fuel> BurnOut;
+
 
     public float Burn()
     {

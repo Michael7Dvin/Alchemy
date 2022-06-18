@@ -1,11 +1,8 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(InteractionRaycaster))]
-public class PickUpInteraction : MonoBehaviour
+public class PickUpInteraction : BaseInteraction
 {
-    private PlayerInput _playerInput;
-
     [SerializeField] private Transform _playerPickUpPoint;    
     [SerializeField] private PickUpable _currentPickUp;
 
@@ -15,17 +12,14 @@ public class PickUpInteraction : MonoBehaviour
     [SerializeField] private float _throwingPower;
     [SerializeField] private float _maxThrowingVectorMagnitude;
 
+    private bool _isRotating;
+    [SerializeField] private float _rotationSpeed;
     [SerializeField] private float _maxRotationSpeed;
 
-    private InteractionRaycaster _interactionRaycaster;    
 
-    public event Action RotationStarted;
-    public event Action RotationPerformed;
-
-    private void Awake()
+    protected override void Awake()
     {
-        _playerInput = new PlayerInput();
-        _interactionRaycaster = GetComponent<InteractionRaycaster>();
+        base.Awake();
 
         _playerInput.Interaction.Interact.performed += context => OnInteractInput();
         _playerInput.Interaction.DropItem.performed += context => Drop();
@@ -38,26 +32,48 @@ public class PickUpInteraction : MonoBehaviour
                 RotationStarted?.Invoke();
             }
         };
-        _playerInput.Interaction.StrartItemRotation.canceled += context => RotationPerformed();
+        _playerInput.Interaction.StrartItemRotation.canceled += context => RotationFinished();
     }
-
-    private void OnEnable() => _playerInput.Enable();
-    private void OnDisable() => _playerInput.Disable();
 
     private void FixedUpdate()
     {
         if(_currentPickUp != null)
         {
             Levitate();
-        }
-        
-        if(_currentPickUp != null && _playerInput.Interaction.StrartItemRotation.IsPressed())
-        {
-            Rotate();
-        }
-    }  
 
-    private void OnInteractInput()
+            if(_isRotating == true)
+            {
+                Rotate();
+            }
+        }
+    }
+
+    private void Update()
+    {
+        HandleRotationInput();
+
+        void HandleRotationInput()
+        {
+            if(_playerInput.Interaction.StrartItemRotation.IsPressed())
+            {
+                if(_isRotating == false)
+                {
+                    _isRotating = true;
+                }
+            }
+            else if(_isRotating == true)
+            {
+                _isRotating = false;
+            }
+        }
+    }
+
+
+    public event Action RotationStarted;
+    public event Action RotationFinished;
+
+
+    protected override void OnInteractInput()
     {
         if(_interactionRaycaster.CurrentInteractionTarget != null)
         {
@@ -125,7 +141,9 @@ public class PickUpInteraction : MonoBehaviour
         Vector2 _inputRotation = _playerInput.Interaction.ItemRotation.ReadValue<Vector2>();
         _inputRotation = Vector2.ClampMagnitude(_inputRotation, _maxRotationSpeed);
 
-        _currentPickUp.transform.Rotate(0, -_inputRotation.x, 0, Space.World);      
-        _currentPickUp.transform.RotateAround(_currentPickUp.transform.position, transform.right, _inputRotation.y);
+        Vector3 verticalInputRoatation = new Vector3(0, -_inputRotation.x, 0);
+        _currentPickUp.Rigidbody.rotation = Quaternion.Euler(verticalInputRoatation) * _currentPickUp.Rigidbody.rotation; 
+
+        _currentPickUp.Rigidbody.rotation = Quaternion.AngleAxis(_inputRotation.y, transform.right) * _currentPickUp.Rigidbody.rotation;
     }
 }
