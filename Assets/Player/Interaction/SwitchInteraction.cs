@@ -1,9 +1,12 @@
+using UnityEngine;
 
-public class OneActionInteraction : BaseInteraction
+public class SwitchInteraction : BaseInteraction
 {
     protected override void Awake()
     {
         base.Awake();
+
+        _playerInput.Interaction.Interact.performed += context => OnInteractInput();
     }
 
 

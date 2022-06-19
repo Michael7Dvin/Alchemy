@@ -138,7 +138,7 @@ public class PickUpInteraction : BaseInteraction
 
     private void Rotate()
     {
-        Vector2 _inputRotation = _playerInput.Interaction.ItemRotation.ReadValue<Vector2>();
+        Vector2 _inputRotation = _playerInput.Interaction.ItemRotation.ReadValue<Vector2>() * _rotationSpeed * Time.deltaTime;
         _inputRotation = Vector2.ClampMagnitude(_inputRotation, _maxRotationSpeed);
 
         Vector3 verticalInputRoatation = new Vector3(0, -_inputRotation.x, 0);

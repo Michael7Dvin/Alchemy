@@ -8,7 +8,7 @@ public class Liquid : Heatable, IHaveRealTimePhysicalProcesses
     [SerializeField] private float _boilingTemperature;
     [SerializeField, Tooltip("Joules / Kilogram")] private float _vaporizationEnthalpy;
 
-    [SerializeField] private Heatable _container;
+    private Heatable _container;
 
 
     [Inject]
