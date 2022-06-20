@@ -18,7 +18,7 @@ public abstract class Heatable : MonoBehaviour
 
     protected void TransferHeat(Heatable heatReceiver)
     {
-        float heat = Mathf.Pow(Mathf.Abs(Temperature - heatReceiver.Temperature), 3) * PhysicalProcessesSimulation.SpeedCorrection;        
+        float heat = Mathf.Pow(Mathf.Abs(Temperature - heatReceiver.Temperature), 3) * Time.deltaTime;        
         heatReceiver.HeatUp(heat);
         CoolDown(heat);
     }

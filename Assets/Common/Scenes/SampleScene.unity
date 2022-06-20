@@ -157,9 +157,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a75ba7ad2b365304e8c468b73cd536c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass: 0.5
+  _mass: 1
   _heatingValue: 30
-  _massBurningInSecond: 0.008
+  _massBurningInSecond: 0.004
 --- !u!65 &38722811
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1240,7 +1240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 2
-  _heatingValue: 150
+  _heatingValue: 15
   _massBurningInSecond: 0.004
 --- !u!136 &1712438114
 CapsuleCollider:
@@ -1376,7 +1376,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807449850}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.487, y: 2.408, z: -3.48}
+  m_LocalPosition: {x: 3.487, y: 2.442, z: -3.48}
   m_LocalScale: {x: 1.1477815, y: 0.014465462, z: 1.1477815}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1396,10 +1396,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 12
-  _temperature: 25.5
+  _temperature: 25
   _specificHeat: 4200
   _boilingTemperature: 100
   _vaporizationEnthalpy: 2300000
+  _container: {fileID: 8511141431803537788}
 --- !u!23 &1807449853
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1576,7 +1577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 333217299904526327}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 3.487, y: 2.5549998, z: -3.4719996}
+  m_LocalPosition: {x: 3.487, y: 2.5889997, z: -3.4719996}
   m_LocalScale: {x: 66.50675, y: 66.506744, z: 42.845013}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1660,9 +1661,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 9
-  _temperature: 26
+  _temperature: 25
   _specificHeat: 460
   _thermalConductivityFactor: 0.8
+  _liquidToAdd: {fileID: 1807449852}
 --- !u!33 &8551063115347907527
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1778,3 +1780,4 @@ MonoBehaviour:
   _heatLossFactor: 0.25
   _currentState: 1
   _heatingChamber: {fileID: 1894207561}
+  _cauldron: {fileID: 8511141431803537788}

@@ -1,23 +1,16 @@
-using System.Collections;
 using UnityEngine;
-using Zenject;
 
-public class Cauldron : Heatable, IHaveRealTimePhysicalProcesses
+public class Cauldron : Heatable
 {
     [Tooltip("Percent of receiving heat transfering directly to liquid")]
     [SerializeField] private float _thermalConductivityFactor;
+    
     private Liquid _liquid;
-
-
-    [Inject]
-    private void Construct(Liquid liquid)
-    {
-        AddLiquid(liquid);
-    }
+    [SerializeField] private Liquid _liquidToAdd;
 
     private void Start()
     {
-        StartCoroutine(ImplementRealTimePhysicalProcesses());
+        AddLiquid(_liquidToAdd);
     }
 
     private void OnDisable()
@@ -28,18 +21,16 @@ public class Cauldron : Heatable, IHaveRealTimePhysicalProcesses
         }
     }
 
-
-    public IEnumerator ImplementRealTimePhysicalProcesses()
+    private void Update()
     {
         TransferHeatToAir();
+
         if (_liquid != null && Temperature > _liquid.Temperature)
-        {            
+        {
             TransferHeat(_liquid);
         }
-                
-        yield return new WaitForSeconds(PhysicalProcessesSimulation.SpeedCorrection);
-        StartCoroutine(ImplementRealTimePhysicalProcesses());
     }
+    
 
     public override void HeatUp(float amountOfHeat)
     {        
@@ -48,12 +39,12 @@ public class Cauldron : Heatable, IHaveRealTimePhysicalProcesses
             float heatTransferingDirectlyToLiquid = amountOfHeat * _thermalConductivityFactor;
             float heatToSelf = amountOfHeat - heatTransferingDirectlyToLiquid;
 
-            Temperature += ConvertHeatToTemperature(heatToSelf);
+            base.HeatUp(heatToSelf);
             _liquid.HeatUp(heatTransferingDirectlyToLiquid);
         }
         else
         {
-            Temperature += ConvertHeatToTemperature(amountOfHeat);
+            base.HeatUp(amountOfHeat);          
         }
     }
 
@@ -64,12 +55,12 @@ public class Cauldron : Heatable, IHaveRealTimePhysicalProcesses
 
         if (Temperature > airTemperature)
         {
-            amountOfHeat = Mathf.Pow(Mathf.Abs(Temperature - airTemperature), 2.5f) * PhysicalProcessesSimulation.SpeedCorrection;
+            amountOfHeat = Mathf.Pow(Mathf.Abs(Temperature - airTemperature), 2.5f) * Time.deltaTime;
             CoolDown(amountOfHeat);
         }
         else
         {
-            amountOfHeat = Mathf.Pow(Mathf.Abs(Temperature - airTemperature), 2.5f) * PhysicalProcessesSimulation.SpeedCorrection;
+            amountOfHeat = Mathf.Pow(Mathf.Abs(Temperature - airTemperature), 2.5f) * Time.deltaTime;
             HeatUp(amountOfHeat);
         }
     }

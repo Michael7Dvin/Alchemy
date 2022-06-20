@@ -1,32 +1,18 @@
 using System;
-using System.Collections;
 using UnityEngine;
-using Zenject;
 
-public class Liquid : Heatable, IHaveRealTimePhysicalProcesses
+public class Liquid : Heatable
 {
     [SerializeField] private float _boilingTemperature;
     [SerializeField, Tooltip("Joules / Kilogram")] private float _vaporizationEnthalpy;
 
-    private Heatable _container;
-
-
-    [Inject]
-    private void Construct(Cauldron container)
-    {
-        _container = container;
-    }
-
-    private void Start()
-    {
-        StartCoroutine(ImplementRealTimePhysicalProcesses());
-    }
-
+    [SerializeField] private Cauldron _container;
+    
 
     public event Action EvaporatedCompletely;
 
 
-    public IEnumerator ImplementRealTimePhysicalProcesses()
+    private void Update()
     {
         TransferHeatToAir();
 
@@ -34,10 +20,8 @@ public class Liquid : Heatable, IHaveRealTimePhysicalProcesses
         {
             TransferHeat(_container);
         }
-
-        yield return new WaitForSeconds(PhysicalProcessesSimulation.SpeedCorrection);
-        StartCoroutine(ImplementRealTimePhysicalProcesses());
     }
+    
 
     public override void HeatUp(float amountOfHeat)
     {
@@ -49,10 +33,9 @@ public class Liquid : Heatable, IHaveRealTimePhysicalProcesses
             float extraTemperature = ConvertHeatToTemperature(extraHeat);
           
             base.HeatUp(amountOfHeat - extraHeat);
-            Debug.Log(amountOfHeat - extraHeat);
 
             float extraEvaporating = 
-                GetMassEvaporatingInSecond(Temperature + extraTemperature / PhysicalProcessesSimulation.SpeedCorrection) - 
+                GetMassEvaporatingInSecond(Temperature + extraTemperature / Time.deltaTime) - 
                 GetMassEvaporatingInSecond(_boilingTemperature);
          
             Mass -= extraEvaporating;           
@@ -71,7 +54,7 @@ public class Liquid : Heatable, IHaveRealTimePhysicalProcesses
         if (Temperature < airTemperature)
         {
             
-            heat = Mathf.Pow(Mathf.Abs(Temperature - airTemperature), 2.5f) * PhysicalProcessesSimulation.SpeedCorrection;
+            heat = Mathf.Pow(Mathf.Abs(Temperature - airTemperature), 2.5f) * Time.deltaTime;
             HeatUp(heat);
         }
         else
@@ -99,19 +82,18 @@ public class Liquid : Heatable, IHaveRealTimePhysicalProcesses
 
     private void Evaporate()
     {
-        float correctedMassEvaporatingInSecond;
-        correctedMassEvaporatingInSecond = GetMassEvaporatingInSecond(Temperature) * PhysicalProcessesSimulation.SpeedCorrection;
+        float massEvaporatingInSecond = GetMassEvaporatingInSecond(Temperature) * Time.deltaTime;
         
-        float EvaporationHeat = _vaporizationEnthalpy * correctedMassEvaporatingInSecond;
+        float EvaporationHeat = _vaporizationEnthalpy * massEvaporatingInSecond;
 
-        if (Mass - correctedMassEvaporatingInSecond <= 0)
+        if (Mass - massEvaporatingInSecond <= 0)
         {
             EvaporatedCompletely?.Invoke();
             Destroy(gameObject);
         }
         else
         {
-            Mass -= correctedMassEvaporatingInSecond;
+            Mass -= massEvaporatingInSecond;
         }
         Temperature -= ConvertHeatToTemperature(EvaporationHeat);
     }    

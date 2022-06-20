@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses, IInteractable
+public class Stove : MonoBehaviour, IInteractable
 {
     private enum StoveStates
     {
@@ -15,31 +14,19 @@ public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses, IInteractabl
     [SerializeField] private StoveStates _currentState = StoveStates.Extinguished;
     
     [SerializeField] private HeatingChamber _heatingChamber;
-    private Heatable _cauldron;
+    [SerializeField] private Cauldron _cauldron;
 
     
-    [Inject]
-    private void Construct(Cauldron cauldron)
-    {
-        _cauldron = cauldron;
-    }
-
-    private void Start()
-    {
-        StartCoroutine(ImplementRealTimePhysicalProcesses());        
-    }
-
     
-    public IEnumerator ImplementRealTimePhysicalProcesses()
-    {   
-        if(_currentState == StoveStates.Ignited)
+
+    private void Update()
+    {
+        if (_currentState == StoveStates.Ignited)
         {
             BurnFuel();
         }
-
-        yield return new WaitForSeconds(PhysicalProcessesSimulation.SpeedCorrection);
-        StartCoroutine(ImplementRealTimePhysicalProcesses());
     }
+    
 
     public void Interact()
     {
@@ -80,7 +67,7 @@ public class Stove : MonoBehaviour, IHaveRealTimePhysicalProcesses, IInteractabl
 
         if(_cauldron != null)
         {
-            _cauldron.HeatUp((amountOfHeat - (amountOfHeat * _heatLossFactor)) * PhysicalProcessesSimulation.SpeedCorrection);
+            _cauldron.HeatUp(amountOfHeat - (amountOfHeat * _heatLossFactor));
         }
     }
 }

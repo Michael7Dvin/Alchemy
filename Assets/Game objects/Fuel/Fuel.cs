@@ -17,7 +17,7 @@ public class Fuel : MonoBehaviour
 
     public float Burn()
     {
-        float amountOfHeat = HeatingValueInJoulesPerKg * _massBurningInSecond * PhysicalProcessesSimulation.SpeedCorrection;
+        float amountOfHeat = HeatingValueInJoulesPerKg * _massBurningInSecond * Time.deltaTime;
 
         if (_mass - _massBurningInSecond <= 0)
         {
@@ -27,7 +27,7 @@ public class Fuel : MonoBehaviour
         }
         else 
         { 
-            _mass -= _massBurningInSecond * PhysicalProcessesSimulation.SpeedCorrection;          
+            _mass -= _massBurningInSecond * Time.deltaTime;          
             return amountOfHeat;        
         }
     }
