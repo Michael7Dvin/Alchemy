@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 public class Stove : MonoBehaviour, IInteractable
 {
     private enum StoveStates
     {
-        Ignited = 0,
-        Extinguished = 1
+        Extinguished = 0,
+        Ignited = 1
     }
 
     [SerializeField] private float _heatLossFactor;    
@@ -16,9 +15,7 @@ public class Stove : MonoBehaviour, IInteractable
     [SerializeField] private HeatingChamber _heatingChamber;
     [SerializeField] private Cauldron _cauldron;
 
-    
-    
-
+        
     private void Update()
     {
         if (_currentState == StoveStates.Ignited)

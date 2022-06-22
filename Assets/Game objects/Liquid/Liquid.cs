@@ -3,40 +3,47 @@ using UnityEngine;
 
 public class Liquid : Heatable
 {
-    [SerializeField] private float _boilingTemperature;
-    [SerializeField, Tooltip("Joules / Kilogram")] private float _vaporizationEnthalpy;
-
-    [SerializeField] private Cauldron _container;
+    [SerializeReference] private LiquidType _liquidType;
+    [SerializeField] private Cauldron _cauldron;
     
-
-    public event Action EvaporatedCompletely;
-
 
     private void Update()
     {
         TransferHeatToAir();
 
-        if (Temperature > _container.Temperature)
+        if (Temperature > _cauldron.Temperature)
         {
-            TransferHeat(_container);
+            TransferHeat(_cauldron);
         }
     }
     
 
+    public event Action EvaporatedCompletely;
+    
+    
+    public void Fill(float fillingLiquidMass, float fillingLiquidTemperature)
+    {
+        Temperature = 
+            (Mass * Temperature + fillingLiquidMass * fillingLiquidTemperature) / 
+            (Mass + fillingLiquidMass);
+
+        Mass += fillingLiquidMass;        
+    }
+
     public override void HeatUp(float amountOfHeat)
     {
-        bool isIncomingHeatWillExceedBoilingTemperature = (Temperature + ConvertHeatToTemperature(amountOfHeat)) > _boilingTemperature;
+        bool isIncomingHeatWillExceedBoilingTemperature = (Temperature + ConvertHeatToTemperature(amountOfHeat)) > _liquidType.BoilingTemperature;
 
         if (isIncomingHeatWillExceedBoilingTemperature)
         {
-            float extraHeat = ConvertTemperatureToHeat(Temperature) + amountOfHeat - ConvertTemperatureToHeat(_boilingTemperature);
+            float extraHeat = ConvertTemperatureToHeat(Temperature) + amountOfHeat - ConvertTemperatureToHeat(_liquidType.BoilingTemperature);
             float extraTemperature = ConvertHeatToTemperature(extraHeat);
           
             base.HeatUp(amountOfHeat - extraHeat);
 
             float extraEvaporating = 
                 GetMassEvaporatingInSecond(Temperature + extraTemperature / Time.deltaTime) - 
-                GetMassEvaporatingInSecond(_boilingTemperature);
+                GetMassEvaporatingInSecond(_liquidType.BoilingTemperature);
          
             Mass -= extraEvaporating;           
         }
@@ -63,7 +70,6 @@ public class Liquid : Heatable
         }
     }
 
-
     private float GetMassEvaporatingInHour(float temperature)
     {
         // Math function, which calculates evaporation
@@ -84,7 +90,7 @@ public class Liquid : Heatable
     {
         float massEvaporatingInSecond = GetMassEvaporatingInSecond(Temperature) * Time.deltaTime;
         
-        float EvaporationHeat = _vaporizationEnthalpy * massEvaporatingInSecond;
+        float EvaporationHeat = _liquidType.VaporizationEnthalpy * massEvaporatingInSecond;
 
         if (Mass - massEvaporatingInSecond <= 0)
         {
@@ -96,5 +102,5 @@ public class Liquid : Heatable
             Mass -= massEvaporatingInSecond;
         }
         Temperature -= ConvertHeatToTemperature(EvaporationHeat);
-    }    
+    }        
 }

@@ -8,6 +8,7 @@ public class Cauldron : Heatable
     private Liquid _liquid;
     [SerializeField] private Liquid _liquidToAdd;
 
+
     private void Start()
     {
         AddLiquid(_liquidToAdd);
@@ -31,6 +32,11 @@ public class Cauldron : Heatable
         }
     }
     
+
+    public void FillLiquid(float fillingLiquidMass, float fillingLiquidTemperature)
+    {
+        _liquid.Fill(fillingLiquidMass, fillingLiquidTemperature);
+    }
 
     public override void HeatUp(float amountOfHeat)
     {        
@@ -64,8 +70,7 @@ public class Cauldron : Heatable
             HeatUp(amountOfHeat);
         }
     }
-    
-
+ 
     private void AddLiquid(Liquid liquid)
     {
         if (_liquid == null)

@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 public class LookAround : MonoBehaviour
 {
+    [SerializeField] private Transform _camera;    
+    
     [SerializeField] float _sensivityX;
     [SerializeField] float _sensivityY;
 
@@ -13,18 +16,18 @@ public class LookAround : MonoBehaviour
     private bool _isLocked;
 
     private PlayerInput _playerInput;
-    [SerializeField] private Transform _camera;    
-    
+    private PickUpInteraction _pickUpInteraction;
 
+
+    [Inject]
+    private void Construct(PickUpInteraction pickUpInteraction)
+    {
+        _pickUpInteraction = pickUpInteraction;
+    }
+    
     private void Awake()
     {
         _playerInput = new PlayerInput();
-
-        if(TryGetComponent(out PickUpInteraction pickUpInteraction))
-        {
-            pickUpInteraction.RotationStarted += () => _isLocked = true;
-            pickUpInteraction.RotationFinished += () => _isLocked = false;
-        }
 
         _playerInput.LookAround.Look.started += OnLookAroundInput;
         _playerInput.LookAround.Look.performed += OnLookAroundInput;
@@ -36,9 +39,22 @@ public class LookAround : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    private void OnEnable() => _playerInput.Enable();
-    private void OnDisable() => _playerInput.Disable();
+    private void OnEnable()
+    {
+        _playerInput.Enable();
 
+        _pickUpInteraction.RotationStarted += () => _isLocked = true;
+        _pickUpInteraction.RotationFinished += () => _isLocked = false;
+
+    }
+
+    private void OnDisable()
+    {
+        _playerInput.Disable();
+
+        _pickUpInteraction.RotationStarted -= () => _isLocked = true;
+        _pickUpInteraction.RotationFinished -= () => _isLocked = false;
+    }
 
     private void Update()
     {

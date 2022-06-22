@@ -2,29 +2,18 @@ using Zenject;
 
 public class MainSceneInstaller : MonoInstaller
 {
-    public Liquid Liquid;
-    public Cauldron Cauldron;
+    public PickUpInteraction PickUpInteraction;
 
     public override void InstallBindings()
-    {    
-        BindLiquid();
-        BindContainer();
+    {
+        BindPickUpInteraction();
     }
 
-    private void BindLiquid()
+    private void BindPickUpInteraction()
     {
         Container
-            .Bind<Liquid>()
-            .FromInstance(Liquid)
+            .Bind<PickUpInteraction>()
+            .FromInstance(PickUpInteraction)
             .AsSingle();
-    }
-
-    private void BindContainer()
-    {
-        Container
-            .Bind<Cauldron>()
-            .FromInstance(Cauldron)
-            .AsSingle();
-
-    }
+    }   
 }
