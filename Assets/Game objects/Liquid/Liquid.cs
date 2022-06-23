@@ -30,6 +30,8 @@ public class Liquid : Heatable
         Mass += fillingLiquidMass;        
     }
 
+    public void Drain(float drainingLiquidMass) => Mass -= drainingLiquidMass;
+
     public override void HeatUp(float amountOfHeat)
     {
         bool isIncomingHeatWillExceedBoilingTemperature = (Temperature + ConvertHeatToTemperature(amountOfHeat)) > _liquidType.BoilingTemperature;

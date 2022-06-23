@@ -38,6 +38,8 @@ public class Cauldron : Heatable
         _liquid.Fill(fillingLiquidMass, fillingLiquidTemperature);
     }
 
+    public void DrainLiquid(float drainingLiquidMass) => _liquid.Drain(drainingLiquidMass);
+
     public override void HeatUp(float amountOfHeat)
     {        
         if (_liquid != null && _liquid.Temperature < Temperature)
