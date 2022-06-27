@@ -18,7 +18,7 @@ public class LiquidDispenser : MonoBehaviour, IInteractable
     private DispenserStates _currentState;
 
     [SerializeField] LiquidType _liquidType;
-    [SerializeField] Cauldron _cauldron;
+    [SerializeField] CauldronLiquidProcesses _cauldron;
 
 
     private void Update()

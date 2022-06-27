@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Cauldron : Heatable
+public class CauldronLiquidProcesses : Heatable
 {
     [Tooltip("Percent of receiving heat transfering directly to liquid")]
     [SerializeField] private float _thermalConductivityFactor;

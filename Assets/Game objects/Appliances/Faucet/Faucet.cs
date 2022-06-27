@@ -13,7 +13,7 @@ public class Faucet : MonoBehaviour, IInteractable
 
     private FaucetStates _currentState;
 
-    [SerializeField] Cauldron _cauldron;
+    [SerializeField] CauldronLiquidProcesses _cauldron;
 
 
     private void Update()

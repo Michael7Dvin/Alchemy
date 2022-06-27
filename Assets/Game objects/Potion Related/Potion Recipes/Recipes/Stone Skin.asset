@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab99613905c6c24fbb31c074a0c42f1, type: 3}
+  m_Name: Stone Skin
+  m_EditorClassIdentifier: 
+  _keys:
+  - {fileID: 11400000, guid: d67b903f73f9b7e45a321097ec21328e, type: 2}
+  - {fileID: 11400000, guid: d59e8f0be23bdc643b76cb4cf2f84f74, type: 2}
+  - {fileID: 11400000, guid: 04561d6e52db67c43a7c4e59d1939015, type: 2}
+  _values: 030000000100000001000000

@@ -4,7 +4,7 @@ using UnityEngine;
 public class Liquid : Heatable
 {
     [SerializeReference] private LiquidType _liquidType;
-    [SerializeField] private Cauldron _cauldron;
+    [SerializeField] private CauldronLiquidProcesses _cauldron;
     
 
     private void Update()

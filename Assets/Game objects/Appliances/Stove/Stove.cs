@@ -13,7 +13,7 @@ public class Stove : MonoBehaviour, IInteractable
     [SerializeField] private StoveStates _currentState = StoveStates.Extinguished;
     
     [SerializeField] private HeatingChamber _heatingChamber;
-    [SerializeField] private Cauldron _cauldron;
+    [SerializeField] private CauldronLiquidProcesses _cauldron;
 
         
     private void Update()

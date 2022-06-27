@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab99613905c6c24fbb31c074a0c42f1, type: 3}
+  m_Name: Growth
+  m_EditorClassIdentifier: 
+  _keys:
+  - {fileID: 11400000, guid: be8e6e51b0ab90b47af28d912c8f13c6, type: 2}
+  - {fileID: 11400000, guid: d67b903f73f9b7e45a321097ec21328e, type: 2}
+  - {fileID: 11400000, guid: a75b99955800875469146844c4110ae2, type: 2}
+  _values: 010000000100000002000000

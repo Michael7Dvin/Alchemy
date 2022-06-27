@@ -15,5 +15,5 @@ public class MainSceneInstaller : MonoInstaller
             .Bind<PickUpInteraction>()
             .FromInstance(PickUpInteraction)
             .AsSingle();
-    }   
+    }
 }
