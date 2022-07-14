@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum MagicElement
+public enum MagicElements
 {
     None = 0,
     Life = 1,
@@ -15,16 +15,16 @@ public enum MagicElement
     Light = 10
 }
 
-[CreateAssetMenu(menuName = "Scriptable Objects/Ingredient Magic Element")]
-public class IngredientMagicElement : ScriptableObject
+[CreateAssetMenu(menuName = "Scriptable Objects/Magic Element")]
+public class MagicElement : ScriptableObject
 {
     [SerializeField] private string _name;
     [SerializeField] private string _description;
-    [SerializeField] private MagicElement _element;
-    [SerializeField] private int _elementStrength;
+    [SerializeField] private MagicElements _magicElementType;
+    [SerializeField] private int _magicElementStrength;
 
     public string Name => _name;
     public string Description => _description;
-    public MagicElement Element => _element;
-    public int ElementStrength => _elementStrength;
+    public MagicElements Element => _magicElementType;
+    public int ElementStrength => _magicElementStrength;
 }

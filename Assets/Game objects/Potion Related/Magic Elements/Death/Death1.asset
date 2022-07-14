@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7ed57283b0bbc4eaa05f2323a0600c, type: 3}
-  m_Name: Blood2
+  m_Script: {fileID: 11500000, guid: e2cc8ee50fc29e942b3e1c07d3e00e2b, type: 3}
+  m_Name: Death1
   m_EditorClassIdentifier: 
   _name: 
   _description: 
-  _element: 3
-  _elementStrength: 2
+  _magicElementType: 8
+  _magicElementStrength: 1

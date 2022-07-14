@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7ed57283b0bbc4eaa05f2323a0600c, type: 3}
-  m_Name: Lightness2
+  m_Script: {fileID: 11500000, guid: e6434b1852bcb1f49b431cf82cfbb9e8, type: 3}
+  m_Name: Giant Spider Gland
   m_EditorClassIdentifier: 
-  _name: 
-  _description: 
-  _element: 9
-  _elementStrength: 2
+  _keys:
+  - {fileID: 11400000, guid: 771efff4b5d418940a16cd1b9d835aa8, type: 2}
+  - {fileID: 11400000, guid: b8f5f535db3df874dad11d66a11f6ff2, type: 2}
+  _values: 0200000001000000

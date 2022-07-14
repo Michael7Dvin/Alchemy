@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7ed57283b0bbc4eaa05f2323a0600c, type: 3}
-  m_Name: Life3
+  m_Script: {fileID: 11500000, guid: 6ab99613905c6c24fbb31c074a0c42f1, type: 3}
+  m_Name: TEST
   m_EditorClassIdentifier: 
-  _name: 
-  _description: 
-  _element: 1
-  _elementStrength: 3
+  _keys:
+  - {fileID: 11400000, guid: 771efff4b5d418940a16cd1b9d835aa8, type: 2}
+  - {fileID: 11400000, guid: a75b99955800875469146844c4110ae2, type: 2}
+  _values: 0100000001000000
+  _name: Test

@@ -13,7 +13,7 @@ public class PotionRecipesDataBase : MonoBehaviour
     private void Awake()
     {
         foreach (var recipe in _potionRecipesToAdd)
-        {
+        {            
             AddRecipe(recipe);
         }
     }
@@ -21,9 +21,47 @@ public class PotionRecipesDataBase : MonoBehaviour
 
     private void AddRecipe(PotionRecipe potionRecipe)
     {
-        if(potionRecipe.IsVaild == true)
+        if(_potionRecipes.Contains(potionRecipe))
+        {
+            Debug.LogWarning($"PotionRecipesDataBase already contains [{potionRecipe}], remove all repeating [{potionRecipe}] from PotionRecipesToAdd");
+        }
+        else if(potionRecipe.IsVaild == true)
         {
             _potionRecipes.Add(potionRecipe);
         }
-    }    
+    }
+
+    private bool IsCorrespondsRecipe(Dictionary<MagicElement, int> potionElements, Dictionary<MagicElement, int> recipe)
+    {
+        foreach (var item in recipe)
+        {
+            if (potionElements.ContainsKey(item.Key))
+            {
+                if (potionElements[item.Key] < item.Value)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<PotionRecipe> GetCorrespondingRecipes(Dictionary<MagicElement, int> potionMagicElements)
+    {
+        List<PotionRecipe> correspondingRecipes = new List<PotionRecipe>();
+
+        foreach (var recipe in _potionRecipes)
+        {
+            if (IsCorrespondsRecipe(potionMagicElements, recipe.Elements) == true)
+            {
+                correspondingRecipes.Add(recipe);
+            }
+        }
+
+        return correspondingRecipes;
+    }
 }
