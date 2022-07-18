@@ -3,41 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
+using UniRx;
 
 public class Potion : Liquid
 {
-    [SerializeField] private List<Ingredient> _ingredients = new List<Ingredient>();
-    [SerializeField] private Dictionary<MagicElement, int> _exccessMagicElements = new Dictionary<MagicElement, int>();
+    private ReactiveDictionary<MagicElement, int> _observableMagicElements = new ReactiveDictionary<MagicElement, int>();
+
+    private BasePotionState _currentPotionState;
+    private List<BasePotionState> _potionStates;
 
     private PotionRecipesDataBase _potionRecipesDataBase;
 
 
-    private List<PotionRecipe> CorrespondingRecipes => _potionRecipesDataBase.GetCorrespondingRecipes(AllMagicElements);
+    public IReadOnlyReactiveDictionary<MagicElement, int> ObservableMagicElements => _observableMagicElements;
+
+    public List<PotionRecipe> CorrespondingRecipes => _potionRecipesDataBase.GetCorrespondingRecipes(_observableMagicElements);
+
+    private List<BasePotionState> PotionStates => _potionStates;
     
-    private Dictionary<MagicElement, int> AllMagicElements
-    {
-        get
-        {
-            Dictionary<MagicElement, int> elements = new Dictionary<MagicElement, int>();
-
-            foreach (Ingredient ingredient in _ingredients)
-            {
-                foreach (KeyValuePair<MagicElement, int> ingredientMagicElement in ingredient.MagicElements.Elements)
-                {
-                    if (elements.ContainsKey(ingredientMagicElement.Key))
-                    {
-                        elements[ingredientMagicElement.Key] += ingredientMagicElement.Value;
-                    }
-                    else
-                    {
-                        elements.Add(ingredientMagicElement.Key, ingredientMagicElement.Value);
-                    }
-                }
-            }
-
-            return elements;
-        }        
-    }
     private Dictionary<MagicElement, int> ExccessMagicElements
     {
         get
@@ -51,7 +34,7 @@ public class Potion : Liquid
 
             Dictionary<MagicElement, int> exccessElements = new Dictionary<MagicElement, int>();
 
-            foreach (var element in AllMagicElements)
+            foreach (var element in _observableMagicElements)
             {
                 if (CorrespondingRecipes[0].Elements.ContainsKey(element.Key) == true)
                 {
@@ -87,7 +70,7 @@ public class Potion : Liquid
 
             foreach (var element in CorrespondingRecipes[0].Elements)
             {
-                float quotient = AllMagicElements[element.Key] / element.Value;
+                float quotient = _observableMagicElements[element.Key] / element.Value;
 
                 int amount = Convert.ToInt32(Mathf.Floor(quotient));
 
@@ -97,7 +80,7 @@ public class Potion : Liquid
             return potionAmounts.Min();        
         }
     }
-
+        
 
     [Inject]
     private void Construct(PotionRecipesDataBase potionRecipesDataBase)
@@ -106,8 +89,37 @@ public class Potion : Liquid
     }
 
 
+    private new void Start()
+    {
+        base.Start();
+
+        _potionStates = new List<BasePotionState>()
+        {
+            new NotCorrespondToAnyRecipePotionState(this, _observableMagicElements),
+            new CorrespondToSingleRecipePotionState(this, _observableMagicElements),
+            new CorrespondToSeveralRecipesPotionState(this, _observableMagicElements),
+            new BrewingPotionState(this, _observableMagicElements),
+            new BrewedPotionState(this, _observableMagicElements)
+        };
+        SwitchPotionState<NotCorrespondToAnyRecipePotionState>();
+    }
+
+
     public void AddIngredient(Ingredient ingredient)
     {
-        _ingredients.Add(ingredient);
+        _currentPotionState.AddIngredient(ingredient);
     }
+
+    public void SwitchPotionState<T>() where T : BasePotionState
+    {
+        BasePotionState state = _potionStates.FirstOrDefault(s => s is T);
+
+        if (state != _currentPotionState)
+        { 
+            _currentPotionState?.Exit();
+            state.Enter();
+            _currentPotionState = state;        
+        }
+    }
+
 }

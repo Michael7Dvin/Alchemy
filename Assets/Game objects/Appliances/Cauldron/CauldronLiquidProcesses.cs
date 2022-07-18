@@ -4,29 +4,15 @@ public class CauldronLiquidProcesses : Heatable
 {
     [Tooltip("Percent of receiving heat transfering directly to liquid")]
     [SerializeField] private float _thermalConductivityFactor;
-    
-    private Liquid _liquid;
-    [SerializeField] private Liquid _liquidToAdd;
 
+    [SerializeField] private Liquid _liquid;
 
-    private void Start()
-    {
-        AddLiquid(_liquidToAdd);
-    }
-
-    private void OnDisable()
-    {
-        if(_liquid != null)
-        {
-            _liquid.EvaporatedCompletely -= RemoveLiquid;
-        }
-    }
 
     private void Update()
     {
         TransferHeatToAir();
 
-        if (_liquid != null && Temperature > _liquid.Temperature)
+        if (_liquid != null && _liquid.CurrentLiquidState != _liquid.GetLiquidState<NoneLiquidState>() && Temperature > _liquid.Temperature)
         {
             TransferHeat(_liquid);
         }
@@ -71,20 +57,5 @@ public class CauldronLiquidProcesses : Heatable
             amountOfHeat = Mathf.Pow(Mathf.Abs(Temperature - airTemperature), 2.5f) * Time.deltaTime;
             HeatUp(amountOfHeat);
         }
-    }
- 
-    private void AddLiquid(Liquid liquid)
-    {
-        if (_liquid == null)
-        {
-            _liquid = liquid;
-            _liquid.EvaporatedCompletely += RemoveLiquid;
-        }
-    }
-
-    private void RemoveLiquid()
-    {
-        _liquid.EvaporatedCompletely -= RemoveLiquid;
-        _liquid = null;
-    }
+    } 
 }

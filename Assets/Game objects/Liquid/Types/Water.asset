@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00b954bf45fc214d83dcf7242affa59, type: 3}
   m_Name: Water
   m_EditorClassIdentifier: 
-  _boilingTemperature: 100
+  _initialBoilingTemperature: 90
+  _finalBoilingTemperature: 100
   _vaporizationEnthalpy: 2300000

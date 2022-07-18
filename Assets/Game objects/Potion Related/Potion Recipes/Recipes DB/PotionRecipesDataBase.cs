@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class PotionRecipesDataBase : MonoBehaviour
@@ -31,7 +32,7 @@ public class PotionRecipesDataBase : MonoBehaviour
         }
     }
 
-    private bool IsCorrespondsRecipe(Dictionary<MagicElement, int> potionElements, Dictionary<MagicElement, int> recipe)
+    private bool IsCorrespondsRecipe(ReactiveDictionary<MagicElement, int> potionElements, Dictionary<MagicElement, int> recipe)
     {
         foreach (var item in recipe)
         {
@@ -50,7 +51,7 @@ public class PotionRecipesDataBase : MonoBehaviour
         return true;
     }
 
-    public List<PotionRecipe> GetCorrespondingRecipes(Dictionary<MagicElement, int> potionMagicElements)
+    public List<PotionRecipe> GetCorrespondingRecipes(ReactiveDictionary<MagicElement, int> potionMagicElements)
     {
         List<PotionRecipe> correspondingRecipes = new List<PotionRecipe>();
 

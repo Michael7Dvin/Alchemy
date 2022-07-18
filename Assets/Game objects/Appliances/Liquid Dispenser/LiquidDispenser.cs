@@ -14,7 +14,7 @@ public class LiquidDispenser : MonoBehaviour, IInteractable
     [Tooltip("Liters(Kilograms) per second")]
     [SerializeField] private float _consumption;
 
-    private float _fillingLiquidTemperature = 25f;
+    [SerializeField] private float _fillingLiquidTemperature = 25f;
     private DispenserStates _currentState;
 
     [SerializeField] LiquidType _liquidType;
