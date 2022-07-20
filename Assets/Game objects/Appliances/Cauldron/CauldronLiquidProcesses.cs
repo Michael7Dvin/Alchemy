@@ -12,7 +12,7 @@ public class CauldronLiquidProcesses : Heatable
     {
         TransferHeatToAir();
 
-        if (_liquid != null && _liquid.CurrentLiquidState != _liquid.GetLiquidState<NoneLiquidState>() && Temperature > _liquid.Temperature)
+        if (_liquid != null && _liquid.IsCurrentLiquidStateEqualsT<NoneLiquidState>() == false && Temperature > _liquid.Temperature)
         {
             TransferHeat(_liquid);
         }

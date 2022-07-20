@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public enum MagicElements
+public enum MagicElementTypes
 {
     None = 0,
     Life = 1,
@@ -18,13 +19,20 @@ public enum MagicElements
 [CreateAssetMenu(menuName = "Scriptable Objects/Magic Element")]
 public class MagicElement : ScriptableObject
 {
-    [SerializeField] private string _name;
-    [SerializeField] private string _description;
-    [SerializeField] private MagicElements _magicElementType;
-    [SerializeField] private int _magicElementStrength;
+    [SerializeField] private MagicElementTypes _type;
+    [SerializeField] private int _strength;
 
-    public string Name => _name;
-    public string Description => _description;
-    public MagicElements Element => _magicElementType;
-    public int ElementStrength => _magicElementStrength;
+    [SerializeField] private List<MagicElementTypes> _oppositeMagicElementTypes;
+
+    [SerializeField] private MagicElement _lessBy1StrengthMagicElement;
+    [SerializeField] private MagicElement _moreBy1StrengthMagicElement;
+
+
+    public MagicElementTypes Type => _type;
+    public int Strength => _strength;
+
+    public List<MagicElementTypes> OppositeMagicElementTypes => _oppositeMagicElementTypes;
+
+    public MagicElement LessBy1StrengthMagicElement => _lessBy1StrengthMagicElement;
+    public MagicElement MoreBy1StrengthMagicElement => _moreBy1StrengthMagicElement;
 }

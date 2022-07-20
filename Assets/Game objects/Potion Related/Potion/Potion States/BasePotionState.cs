@@ -3,15 +3,15 @@ using UniRx;
 
 public abstract class BasePotionState
 {
-    protected ReactiveDictionary<MagicElement, int> _magicElements;
+    protected ReactiveCollection<MagicElement> _potionMagicElements;
     
     protected readonly Potion _potion;
 
 
-    protected BasePotionState(Potion potion, ReactiveDictionary<MagicElement, int> magicElements)
+    protected BasePotionState(Potion potion, ReactiveCollection<MagicElement> magicElements)
     {
         _potion = potion;
-        _magicElements = magicElements;
+        _potionMagicElements = magicElements;
 
         _potion.ObservableMagicElements.ObserveAdd().Subscribe(_ => HandleMagicElementsChange());
         _potion.ObservableMagicElements.ObserveReplace().Subscribe(_ => HandleMagicElementsChange());
@@ -19,25 +19,16 @@ public abstract class BasePotionState
     }
 
 
-    public virtual void Enter()
-    {        
-    }
+    public virtual void Enter() { }               
+    public virtual void Exit() { }
 
-    public virtual void Exit()
-    {
-    }
-    
     public virtual void AddIngredient(Ingredient ingredient)
-    {      
-        foreach (KeyValuePair<MagicElement, int> ingredientMagicElement in ingredient.MagicElements.Elements)
+    {
+        if (_potion.IsCurrentLiquidStateEqualsT<BoilingLiquidState>())
         {
-            if (_magicElements.ContainsKey(ingredientMagicElement.Key))
+            foreach( MagicElement ingredientMagicElement in ingredient.MagicElements)
             {
-                _magicElements[ingredientMagicElement.Key] += ingredientMagicElement.Value;
-            }
-            else
-            {
-                _magicElements.Add(ingredientMagicElement.Key, ingredientMagicElement.Value);
+                _potionMagicElements.Add(ingredientMagicElement);
             }
         }
     }

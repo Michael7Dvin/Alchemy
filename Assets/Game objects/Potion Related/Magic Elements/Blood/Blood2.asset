@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2cc8ee50fc29e942b3e1c07d3e00e2b, type: 3}
   m_Name: Blood2
   m_EditorClassIdentifier: 
-  _name: 
-  _description: 
   _magicElementType: 3
   _magicElementStrength: 2
+  _oppositeMagicElementTypes: 

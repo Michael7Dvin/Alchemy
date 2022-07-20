@@ -3,15 +3,11 @@ using UnityEngine;
 
 public class Ingredient : MonoBehaviour
 {
-    [SerializeField] private string _name;
-    [SerializeField] private string _description;
-    [SerializeField] private IngredientMagicElements _ingredientMagicElements;
+    [SerializeField] private List<MagicElement> _magicElements;
     [SerializeField] private float _amplifyFactor;
 
 
-    public string Name => _name;
-    public string Description => _description;
-    public IngredientMagicElements MagicElements => _ingredientMagicElements;
+    public IReadOnlyList<MagicElement> MagicElements => _magicElements;
     public float AmplifyFactor => _amplifyFactor;
 
 

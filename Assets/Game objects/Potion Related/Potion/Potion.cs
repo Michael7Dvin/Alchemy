@@ -7,7 +7,7 @@ using UniRx;
 
 public class Potion : Liquid
 {
-    private ReactiveDictionary<MagicElement, int> _observableMagicElements = new ReactiveDictionary<MagicElement, int>();
+    private ReactiveCollection<MagicElement> _observableMagicElements = new ReactiveCollection<MagicElement>();
 
     private BasePotionState _currentPotionState;
     private List<BasePotionState> _potionStates;
@@ -15,43 +15,50 @@ public class Potion : Liquid
     private PotionRecipesDataBase _potionRecipesDataBase;
 
 
-    public IReadOnlyReactiveDictionary<MagicElement, int> ObservableMagicElements => _observableMagicElements;
+    public IReadOnlyReactiveCollection<MagicElement> ObservableMagicElements => _observableMagicElements;
 
-    public List<PotionRecipe> CorrespondingRecipes => _potionRecipesDataBase.GetCorrespondingRecipes(_observableMagicElements);
+    public List<PotionRecipe> CorrespondingRecipes => _potionRecipesDataBase.GetCorrespondingRecipes(_observableMagicElements.ToList());
 
     private List<BasePotionState> PotionStates => _potionStates;
     
-    private Dictionary<MagicElement, int> ExccessMagicElements
+    private List<MagicElement> ExccessMagicElements
     {
         get
         {
             if(CorrespondingRecipes.Count == 0 | CorrespondingRecipes.Count > 1)
             {
-                Debug.LogError("Unavailable to get ExccessMagicElements");
-                return null;
+                return new List<MagicElement>();
             }
 
+            List<MagicElement> exccessMagicElements = new List<MagicElement>();
 
-            Dictionary<MagicElement, int> exccessElements = new Dictionary<MagicElement, int>();
-
-            foreach (var element in _observableMagicElements)
+            foreach(MagicElement magicElement in _observableMagicElements.Distinct())
             {
-                if (CorrespondingRecipes[0].Elements.ContainsKey(element.Key) == true)
+                if(CorrespondingRecipes[0].MagicElements.Contains(magicElement))
                 {
-                    int exccess = element.Value - (CorrespondingRecipes[0].Elements[element.Key] * PotionAmount);
+                    int MagicElementAmountAtPotion = _observableMagicElements.Count(x => x == magicElement);
+                    int MagicElementAmountAtRecipe = CorrespondingRecipes[0].MagicElements.Count(x => x == magicElement) * PotionAmount;
 
-                    if (exccess > 0)
-                    {
-                        exccessElements.Add(element.Key, exccess);
-                    }
+                    int amountExccess = MagicElementAmountAtPotion - MagicElementAmountAtRecipe;
+
+                    AddMagicElements(magicElement, amountExccess);
                 }
                 else
                 {
-                    exccessElements.Add(element.Key, element.Value);
+                    int amount = _observableMagicElements.Count(x => x == magicElement);
+                    AddMagicElements(magicElement, amount);
                 }
             }
 
-            return exccessElements;
+            void AddMagicElements(MagicElement magicElement, int amount)
+            {
+                for(int i = 0; i < amount; i++)
+                {
+                    exccessMagicElements.Add(magicElement);
+                }
+            }
+           
+            return exccessMagicElements;
         }
     }
 
@@ -61,23 +68,24 @@ public class Potion : Liquid
         {
             if (CorrespondingRecipes.Count == 0 | CorrespondingRecipes.Count > 1)
             {
-                Debug.LogError("Unavailable to get PotionAmount");
                 return 0;
             }
 
-
             List<int> potionAmounts = new List<int>();
 
-            foreach (var element in CorrespondingRecipes[0].Elements)
+            foreach (MagicElement magicElement in CorrespondingRecipes[0].MagicElements)
             {
-                float quotient = _observableMagicElements[element.Key] / element.Value;
+                int MagicElementAmountAtPotion = _observableMagicElements.Count(x => x == magicElement);
+                int MagicElementAmountAtRecipe = CorrespondingRecipes[0].MagicElements.Count(x => x == magicElement);
 
-                int amount = Convert.ToInt32(Mathf.Floor(quotient));
+                float magicElementAmountQuotient = MagicElementAmountAtPotion / MagicElementAmountAtRecipe;
+
+                int amount = Convert.ToInt32(Mathf.Floor(magicElementAmountQuotient));
 
                 potionAmounts.Add(amount);
             }
 
-            return potionAmounts.Min();        
+            return potionAmounts.Min();      
         }
     }
         
@@ -121,5 +129,4 @@ public class Potion : Liquid
             _currentPotionState = state;        
         }
     }
-
 }

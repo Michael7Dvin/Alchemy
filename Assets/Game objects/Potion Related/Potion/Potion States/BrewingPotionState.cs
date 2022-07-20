@@ -5,8 +5,7 @@ public class BrewingPotionState : BasePotionState
 {
     private List<PotionRecipe> _previousCorrespondingRecipes;
 
-
-    public BrewingPotionState(Potion potion, ReactiveDictionary<MagicElement, int> magicElements) : base(potion, magicElements)
+    public BrewingPotionState(Potion potion, ReactiveCollection<MagicElement> magicElements) : base(potion, magicElements)
     {
     }
 
@@ -15,17 +14,7 @@ public class BrewingPotionState : BasePotionState
     {
         _previousCorrespondingRecipes = _potion.CorrespondingRecipes;
 
-        foreach (KeyValuePair<MagicElement, int> ingredientMagicElement in ingredient.MagicElements.Elements)
-        {
-            if (_magicElements.ContainsKey(ingredientMagicElement.Key))
-            {
-                _magicElements[ingredientMagicElement.Key] += ingredientMagicElement.Value;
-            }
-            else
-            {
-                _magicElements.Add(ingredientMagicElement.Key, ingredientMagicElement.Value);
-            }
-        }
+        base.AddIngredient(ingredient);
     }
 
     protected override void HandleMagicElementsChange()

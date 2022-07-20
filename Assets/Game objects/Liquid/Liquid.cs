@@ -63,9 +63,9 @@ public class Liquid : Heatable
         return GetMassEvaporatingInHour(temperature) / 60 / 60;
     }
 
-    public BaseLiquidState GetLiquidState<T>() where T : BaseLiquidState
+    public bool IsCurrentLiquidStateEqualsT<T>() where T : BaseLiquidState
     {
-        return _liquidStates.FirstOrDefault(s => s is T);
+        return _currentLiquidState == _liquidStates.FirstOrDefault(s => s is T);
     }
 
     public void SwitchLiquidState<T>() where T : BaseLiquidState

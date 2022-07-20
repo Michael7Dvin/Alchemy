@@ -2,7 +2,7 @@ using UniRx;
 
 public class CorrespondToSingleRecipePotionState : BasePotionState
 {
-    public CorrespondToSingleRecipePotionState(Potion potion, ReactiveDictionary<MagicElement, int> magicElements) : base(potion, magicElements)
+    public CorrespondToSingleRecipePotionState(Potion potion, ReactiveCollection<MagicElement> magicElements) : base(potion, magicElements)
     {
     }
 
@@ -12,10 +12,6 @@ public class CorrespondToSingleRecipePotionState : BasePotionState
         if (_potion.CorrespondingRecipes.Count == 0)
         {
             _potion.SwitchPotionState<NotCorrespondToAnyRecipePotionState>();
-        }
-        else if (_potion.CorrespondingRecipes.Count == 1)
-        {
-            return;
         }
         else if (_potion.CorrespondingRecipes.Count > 1)
         {

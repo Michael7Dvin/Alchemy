@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 
@@ -20,49 +21,33 @@ public class PotionRecipesDataBase : MonoBehaviour
     }
 
 
+    public List<PotionRecipe> GetCorrespondingRecipes(List<MagicElement> potionMagicElements)
+    {
+        return _potionRecipes.Where(recipe => IsCorrespondsRecipe(potionMagicElements, recipe)).ToList();
+    }
+
+    private bool IsCorrespondsRecipe(List<MagicElement> potionMagicElements, PotionRecipe recipe)
+    {
+        return recipe.MagicElements.All(x =>
+        {
+            if (potionMagicElements.Contains(x))
+            {
+                return potionMagicElements.Count(y => y == x) >= recipe.MagicElements.Count(y => y == x);
+            }
+            return false;
+        });
+    }
+
     private void AddRecipe(PotionRecipe potionRecipe)
     {
         if(_potionRecipes.Contains(potionRecipe))
         {
             Debug.LogWarning($"PotionRecipesDataBase already contains [{potionRecipe}], remove all repeating [{potionRecipe}] from PotionRecipesToAdd");
         }
-        else if(potionRecipe.IsVaild == true)
+        else if(potionRecipe.MagicElements.Count > 0)
         {
             _potionRecipes.Add(potionRecipe);
         }
     }
 
-    private bool IsCorrespondsRecipe(ReactiveDictionary<MagicElement, int> potionElements, Dictionary<MagicElement, int> recipe)
-    {
-        foreach (var item in recipe)
-        {
-            if (potionElements.ContainsKey(item.Key))
-            {
-                if (potionElements[item.Key] < item.Value)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public List<PotionRecipe> GetCorrespondingRecipes(ReactiveDictionary<MagicElement, int> potionMagicElements)
-    {
-        List<PotionRecipe> correspondingRecipes = new List<PotionRecipe>();
-
-        foreach (var recipe in _potionRecipes)
-        {
-            if (IsCorrespondsRecipe(potionMagicElements, recipe.Elements) == true)
-            {
-                correspondingRecipes.Add(recipe);
-            }
-        }
-
-        return correspondingRecipes;
-    }
 }
