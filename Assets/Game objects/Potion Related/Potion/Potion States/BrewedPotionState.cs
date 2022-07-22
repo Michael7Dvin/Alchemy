@@ -2,7 +2,7 @@ using UniRx;
 
 public class BrewedPotionState : BasePotionState
 {
-    public BrewedPotionState(Potion potion, ReactiveCollection<MagicElement> magicElements) : base(potion, magicElements)
+    public BrewedPotionState(Potion potion, PotionMagicElements potionMagicElements) : base(potion, potionMagicElements)
     {
     }
 

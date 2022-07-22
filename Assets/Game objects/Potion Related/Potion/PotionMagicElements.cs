@@ -6,6 +6,7 @@ public class PotionMagicElements
 {
     private ReactiveCollection<MagicElement> _observableMagicElements = new ReactiveCollection<MagicElement>();
 
+
     public IReadOnlyReactiveCollection<MagicElement> ObservableMagicElements => _observableMagicElements;
 
 

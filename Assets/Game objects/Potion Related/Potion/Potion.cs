@@ -7,7 +7,9 @@ using UniRx;
 
 public class Potion : Liquid
 {
-    private ReactiveCollection<MagicElement> _observableMagicElements = new ReactiveCollection<MagicElement>();
+    //private ReactiveCollection<MagicElement> _observableMagicElements = new ReactiveCollection<MagicElement>();
+
+    private readonly PotionMagicElements _magicElements = new PotionMagicElements();
 
     private BasePotionState _currentPotionState;
     private List<BasePotionState> _potionStates;
@@ -15,9 +17,9 @@ public class Potion : Liquid
     private PotionRecipesDataBase _potionRecipesDataBase;
 
 
-    public IReadOnlyReactiveCollection<MagicElement> ObservableMagicElements => _observableMagicElements;
+    public IReadOnlyReactiveCollection<MagicElement> ObservableMagicElements => _magicElements.ObservableMagicElements;
 
-    public List<PotionRecipe> CorrespondingRecipes => _potionRecipesDataBase.GetCorrespondingRecipes(_observableMagicElements.ToList());
+    public List<PotionRecipe> CorrespondingRecipes => _potionRecipesDataBase.GetCorrespondingRecipes(ObservableMagicElements.ToList());
 
     private List<BasePotionState> PotionStates => _potionStates;
     
@@ -32,11 +34,11 @@ public class Potion : Liquid
 
             List<MagicElement> exccessMagicElements = new List<MagicElement>();
 
-            foreach(MagicElement magicElement in _observableMagicElements.Distinct())
+            foreach(MagicElement magicElement in ObservableMagicElements.Distinct())
             {
                 if(CorrespondingRecipes[0].MagicElements.Contains(magicElement))
                 {
-                    int MagicElementAmountAtPotion = _observableMagicElements.Count(x => x == magicElement);
+                    int MagicElementAmountAtPotion = ObservableMagicElements.Count(x => x == magicElement);
                     int MagicElementAmountAtRecipe = CorrespondingRecipes[0].MagicElements.Count(x => x == magicElement) * PotionAmount;
 
                     int amountExccess = MagicElementAmountAtPotion - MagicElementAmountAtRecipe;
@@ -45,7 +47,7 @@ public class Potion : Liquid
                 }
                 else
                 {
-                    int amount = _observableMagicElements.Count(x => x == magicElement);
+                    int amount = ObservableMagicElements.Count(x => x == magicElement);
                     AddMagicElements(magicElement, amount);
                 }
             }
@@ -75,7 +77,7 @@ public class Potion : Liquid
 
             foreach (MagicElement magicElement in CorrespondingRecipes[0].MagicElements)
             {
-                int MagicElementAmountAtPotion = _observableMagicElements.Count(x => x == magicElement);
+                int MagicElementAmountAtPotion = ObservableMagicElements.Count(x => x == magicElement);
                 int MagicElementAmountAtRecipe = CorrespondingRecipes[0].MagicElements.Count(x => x == magicElement);
 
                 float magicElementAmountQuotient = MagicElementAmountAtPotion / MagicElementAmountAtRecipe;
@@ -103,11 +105,11 @@ public class Potion : Liquid
 
         _potionStates = new List<BasePotionState>()
         {
-            new NotCorrespondToAnyRecipePotionState(this, _observableMagicElements),
-            new CorrespondToSingleRecipePotionState(this, _observableMagicElements),
-            new CorrespondToSeveralRecipesPotionState(this, _observableMagicElements),
-            new BrewingPotionState(this, _observableMagicElements),
-            new BrewedPotionState(this, _observableMagicElements)
+            new NotCorrespondToAnyRecipePotionState(this, _magicElements),
+            new CorrespondToSingleRecipePotionState(this, _magicElements),
+            new CorrespondToSeveralRecipesPotionState(this, _magicElements),
+            new BrewingPotionState(this, _magicElements),
+            new BrewedPotionState(this, _magicElements)
         };
         SwitchPotionState<NotCorrespondToAnyRecipePotionState>();
     }

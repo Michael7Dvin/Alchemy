@@ -2,10 +2,9 @@ using UniRx;
 
 public class NotCorrespondToAnyRecipePotionState : BasePotionState
 {
-    public NotCorrespondToAnyRecipePotionState(Potion potion, ReactiveCollection<MagicElement> magicElements) : base(potion, magicElements)
+    public NotCorrespondToAnyRecipePotionState(Potion potion, PotionMagicElements potionMagicElements) : base(potion, potionMagicElements)
     {
     }
-
 
     protected override void HandleMagicElementsChange()
     {

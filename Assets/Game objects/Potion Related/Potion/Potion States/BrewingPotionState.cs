@@ -5,7 +5,7 @@ public class BrewingPotionState : BasePotionState
 {
     private List<PotionRecipe> _previousCorrespondingRecipes;
 
-    public BrewingPotionState(Potion potion, ReactiveCollection<MagicElement> magicElements) : base(potion, magicElements)
+    public BrewingPotionState(Potion potion, PotionMagicElements potionMagicElements) : base(potion, potionMagicElements)
     {
     }
 

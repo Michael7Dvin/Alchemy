@@ -1,17 +1,16 @@
-using System.Collections.Generic;
 using UniRx;
 
 public abstract class BasePotionState
 {
-    protected ReactiveCollection<MagicElement> _potionMagicElements;
+    protected PotionMagicElements _potionMagicElements;
     
     protected readonly Potion _potion;
 
 
-    protected BasePotionState(Potion potion, ReactiveCollection<MagicElement> magicElements)
+    protected BasePotionState(Potion potion, PotionMagicElements potionMagicElements)
     {
         _potion = potion;
-        _potionMagicElements = magicElements;
+        _potionMagicElements = potionMagicElements;
 
         _potion.ObservableMagicElements.ObserveAdd().Subscribe(_ => HandleMagicElementsChange());
         _potion.ObservableMagicElements.ObserveReplace().Subscribe(_ => HandleMagicElementsChange());
@@ -28,7 +27,7 @@ public abstract class BasePotionState
         {
             foreach( MagicElement ingredientMagicElement in ingredient.MagicElements)
             {
-                _potionMagicElements.Add(ingredientMagicElement);
+                _potionMagicElements.AddMagicElement(ingredientMagicElement);
             }
         }
     }

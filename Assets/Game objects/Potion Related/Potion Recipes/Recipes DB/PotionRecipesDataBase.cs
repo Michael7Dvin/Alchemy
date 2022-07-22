@@ -28,13 +28,23 @@ public class PotionRecipesDataBase : MonoBehaviour
 
     private bool IsCorrespondsRecipe(List<MagicElement> potionMagicElements, PotionRecipe recipe)
     {
-        return recipe.MagicElements.All(x =>
+        List<MagicElement> unoccupiedMagicElements = potionMagicElements.FindAll(x => x);
+
+        return recipe.MagicElements.All(recipeElement =>
         {
-            if (potionMagicElements.Contains(x))
+            List<MagicElement> allCorrespondingMagicElements = unoccupiedMagicElements
+            .FindAll(potionElement => potionElement.Type == recipeElement.Type && potionElement.Strength >= recipeElement.Strength);
+
+            if (allCorrespondingMagicElements.Count == 0)
             {
-                return potionMagicElements.Count(y => y == x) >= recipe.MagicElements.Count(y => y == x);
+                return false;
             }
-            return false;
+
+            int minimumStrength = allCorrespondingMagicElements.Min(x => x.Strength);
+            MagicElement correspondMagicElement = allCorrespondingMagicElements.FirstOrDefault(x => x.Strength == minimumStrength);
+
+            unoccupiedMagicElements.Remove(correspondMagicElement);
+            return true;
         });
     }
 

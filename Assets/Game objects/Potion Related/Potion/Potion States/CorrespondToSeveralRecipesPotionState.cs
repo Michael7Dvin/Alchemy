@@ -2,7 +2,7 @@ using UniRx;
 
 public class CorrespondToSeveralRecipesPotionState : BasePotionState
 {
-    public CorrespondToSeveralRecipesPotionState(Potion potion, ReactiveCollection<MagicElement> magicElements) : base(potion, magicElements)
+    public CorrespondToSeveralRecipesPotionState(Potion potion, PotionMagicElements potionMagicElements) : base(potion, potionMagicElements)
     {
     }
 
