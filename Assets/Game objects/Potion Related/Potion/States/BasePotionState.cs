@@ -1,10 +1,10 @@
+using UnityEngine;
 using UniRx;
 
-public abstract class BasePotionState
+public abstract class BasePotionState : IIngredientVisitor
 {
-    protected PotionMagicElements _potionMagicElements;
-    
     protected readonly Potion _potion;
+    protected PotionMagicElements _potionMagicElements;
 
 
     protected BasePotionState(Potion potion, PotionMagicElements potionMagicElements)
@@ -18,19 +18,38 @@ public abstract class BasePotionState
     }
 
 
-    public virtual void Enter() { }               
+    public virtual void Enter() { }
     public virtual void Exit() { }
 
     public virtual void AddIngredient(Ingredient ingredient)
     {
+        ingredient.Accept(this);        
+    }
+
+
+
+    protected abstract void HandleMagicElementsChange();
+
+
+
+    public virtual void Visit(Filler ingredient)
+    {
         if (_potion.IsCurrentLiquidStateEqualsT<BoilingLiquidState>())
         {
-            foreach( MagicElement ingredientMagicElement in ingredient.MagicElements)
+            foreach (MagicElement ingredientMagicElement in ingredient.MagicElements)
             {
                 _potionMagicElements.AddMagicElement(ingredientMagicElement);
             }
         }
     }
-    
-    protected abstract void HandleMagicElementsChange();
+
+    public virtual void Visit(Amplifier ingredient)
+    {
+        Debug.Log("amplified");
+    }
+
+    public virtual void Visit(Neutralizer ingredient)
+    {
+        Debug.Log("Nutralized");
+    }
 }
